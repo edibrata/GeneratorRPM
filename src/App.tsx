@@ -30,6 +30,10 @@ export default function App() {
     setResult('');
 
     try {
+      if (window.location.hostname.includes('github.io')) {
+        throw new Error('Fitur ini membutuhkan server backend (Node.js) untuk memproses AI, yang tidak didukung oleh GitHub Pages (hanya untuk web statis). Silakan deploy aplikasi ini ke Render, Vercel, atau Cloud Run agar berfungsi penuh.');
+      }
+
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
