@@ -1,0 +1,8 @@
+{
+  "name": "Generator RPM",
+  "description": "Aplikasi untuk membuat Rencana Pelaksanaan Pembelajaran (RPP) / Modul Ajar yang mengacu pada Panduan Pembelajaran dan Asesmen (PPA) Edisi Revisi Tahun 2025.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
