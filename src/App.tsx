@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Loader2, Sparkles, Printer, FileText, FileDown, Copy } from 'lucide-react';
 
 export default function App() {
@@ -302,7 +303,7 @@ export default function App() {
                     Memproses...
                   </>
                 ) : (
-                  'Hasilkan Modul Ajar'
+                  'Hasilkan Rencana Pembelajaran'
                 )}
               </button>
             </div>
@@ -342,7 +343,7 @@ export default function App() {
               )}
             </div>
             
-            <div className="p-6 flex-1 overflow-y-auto print:overflow-visible print:p-0">
+            <div className="p-6 flex-1 bg-slate-50 overflow-y-auto print:overflow-visible print:p-0 print:bg-white">
               {error && (
                 <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-100 text-sm">
                   {error}
@@ -353,7 +354,7 @@ export default function App() {
                 <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-4">
                   <Sparkles className="w-12 h-12 opacity-20" />
                   <p className="text-sm text-center max-w-sm">
-                    Isi parameter di sebelah kiri dan klik "Hasilkan Modul Ajar" untuk merancang pembelajaran mendalam.
+                    Isi parameter di sebelah kiri dan klik "Hasilkan Rencana Pembelajaran" untuk merancang pembelajaran mendalam.
                   </p>
                 </div>
               )}
@@ -366,8 +367,10 @@ export default function App() {
               )}
 
               {result && !loading && (
-                <div className="prose prose-slate prose-sm max-w-none prose-headings:text-blue-900 prose-a:text-blue-600 print:text-black print:prose-headings:text-black">
-                  <ReactMarkdown>{result.replace(/^---[\s\S]*?---\n/, '')}</ReactMarkdown>
+                <div className="bg-white mx-auto shadow-md border border-slate-200 rounded-xl max-w-5xl p-8 sm:p-12 print:p-0 print:border-none print:shadow-none mb-8">
+                  <div className="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h1:text-center prose-h1:text-2xl prose-h1:mb-8 prose-h1:uppercase prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:border-b prose-h2:pb-2 prose-h2:border-slate-200 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3 prose-p:text-slate-700 prose-p:leading-relaxed prose-li:text-slate-700 prose-strong:text-slate-900 prose-strong:font-semibold prose-table:w-full prose-table:border-collapse prose-table:border prose-table:border-slate-300 prose-table:my-6 prose-th:bg-slate-100 prose-th:p-3 prose-th:border prose-th:border-slate-300 prose-th:text-left prose-td:p-3 prose-td:border prose-td:border-slate-300 prose-td:align-top print:text-black print:prose-headings:text-black">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.replace(/^---[\s\S]*?---\n/, '')}</ReactMarkdown>
+                  </div>
                 </div>
               )}
             </div>
