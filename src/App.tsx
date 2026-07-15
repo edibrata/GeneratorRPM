@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Loader2, Sparkles, Printer, FileText, FileDown, Copy } from 'lucide-react';
+import { generateRPM } from './lib/gemini';
 
 export default function App() {
   const [formData, setFormData] = useState({
@@ -31,25 +32,11 @@ export default function App() {
     setResult('');
 
     try {
-      if (window.location.hostname.includes('github.io')) {
-        throw new Error('Fitur ini membutuhkan server backend (Node.js) untuk memproses AI, yang tidak didukung oleh GitHub Pages (hanya untuk web statis). Silakan deploy aplikasi ini ke Render, Vercel, atau Cloud Run agar berfungsi penuh.');
-      }
-
-      const response = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Gagal menghasilkan RPP');
-      }
-
-      const data = await response.json();
-      setResult(data.result);
+      const generatedResult = await generateRPM(formData);
+      setResult(generatedResult);
     } catch (err: any) {
-      setError(err.message);
+      console.error(err);
+      setError(err.message || 'Terjadi kesalahan saat menghasilkan RPP.');
     } finally {
       setLoading(false);
     }
@@ -90,29 +77,29 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 text-slate-800 font-sans overflow-hidden print:h-auto print:bg-white print:overflow-visible">
+    <div className="flex flex-col min-h-screen md:h-screen bg-slate-50 text-slate-800 font-sans md:overflow-hidden print:h-auto print:bg-white print:overflow-visible">
       {/* Header Section */}
-      <header className="py-3 bg-blue-900 text-white flex items-center justify-between px-6 flex-shrink-0 print:hidden">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-            <Sparkles className="w-6 h-6 text-blue-900" />
+      <header className="py-3 bg-blue-900 text-white flex items-center justify-between px-4 md:px-6 flex-shrink-0 print:hidden">
+        <div className="flex items-center space-x-2 md:space-x-3">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+            <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-blue-900" />
           </div>
           <div>
-            <h1 className="text-lg font-bold leading-tight">Generator Penyusunan Rencana Pembelajaran</h1>
-            <p className="text-xs text-blue-200 mt-0.5">Berdasarkan Panduan Pembelajaran dan Asesmen serta Panduan-Panduan Mata Pelajaran BSKAP 2025</p>
+            <h1 className="text-base md:text-lg font-bold leading-tight">Generator RPP AI</h1>
+            <p className="text-[10px] md:text-xs text-blue-200 mt-0.5">Panduan BSKAP 2025</p>
           </div>
         </div>
-        <div className="hidden md:flex flex-col items-end justify-center">
-          <div className="bg-blue-800 border border-blue-700 px-3 py-1.5 rounded-full flex items-center space-x-2">
-            <span className="text-[10px] uppercase tracking-widest text-blue-300 font-semibold">Dikembangkan oleh</span>
-            <span className="text-xs font-bold text-white">Edi Brata</span>
+        <div className="flex flex-col items-end justify-center">
+          <div className="bg-blue-800 border border-blue-700 px-2 py-1 md:px-3 md:py-1.5 rounded-full flex items-center space-x-1 md:space-x-2">
+            <span className="hidden md:inline text-[10px] uppercase tracking-widest text-blue-300 font-semibold">Dikembangkan oleh</span>
+            <span className="text-[10px] md:text-xs font-bold text-white">Edi Brata</span>
           </div>
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden flex-col md:flex-row print:overflow-visible print:block">
+      <div className="flex flex-1 flex-col md:flex-row md:overflow-hidden print:overflow-visible print:block">
         {/* Sidebar Input */}
-        <aside className="w-full md:w-80 lg:w-96 bg-white border-b md:border-b-0 md:border-r border-slate-200 p-5 flex flex-col space-y-4 flex-shrink-0 overflow-y-auto print:hidden">
+        <aside className="w-full md:w-80 lg:w-96 bg-white border-b md:border-b-0 md:border-r border-slate-200 p-4 md:p-5 flex flex-col space-y-4 flex-shrink-0 md:overflow-y-auto print:hidden">
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4 h-full">
             <div className="space-y-4 pb-4 border-b border-slate-200">
               <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Identitas</h3>
@@ -312,12 +299,12 @@ export default function App() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 p-6 overflow-auto bg-slate-50 print:p-0 print:bg-white print:overflow-visible">
-          <div className="h-full bg-white rounded-2xl shadow-md border border-slate-200 flex flex-col overflow-hidden print:shadow-none print:border-none print:rounded-none">
-            <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between print:hidden">
-              <h2 className="text-sm font-bold text-blue-900">HASIL RENCANA PEMBELAJARAN</h2>
+        <main className="flex-1 p-4 md:p-6 md:overflow-auto bg-slate-50 print:p-0 print:bg-white print:overflow-visible">
+          <div className="min-h-[500px] md:h-full bg-white rounded-2xl shadow-md border border-slate-200 flex flex-col md:overflow-hidden print:shadow-none print:border-none print:rounded-none">
+            <div className="p-3 md:p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between print:hidden">
+              <h2 className="text-xs md:text-sm font-bold text-blue-900">HASIL RENCANA PEMBELAJARAN</h2>
               {result && (
-                <div className="flex space-x-2">
+                <div className="flex space-x-1 md:space-x-2">
                   <button
                     onClick={handleExportPDF}
                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-red-600 rounded-md hover:bg-red-700 transition"
@@ -343,7 +330,7 @@ export default function App() {
               )}
             </div>
             
-            <div className="p-6 flex-1 bg-slate-50 overflow-y-auto print:overflow-visible print:p-0 print:bg-white">
+            <div className="p-4 md:p-6 flex-1 bg-slate-50 md:overflow-y-auto print:overflow-visible print:p-0 print:bg-white">
               {error && (
                 <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-100 text-sm">
                   {error}

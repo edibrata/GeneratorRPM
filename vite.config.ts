@@ -6,6 +6,7 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     base: '/GeneratorRPM/',
+    envPrefix: ['VITE_', 'GEMINI_API_KEY'],
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
