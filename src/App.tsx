@@ -86,18 +86,17 @@ export default function App() {
       {/* Header Section */}
       <header className="py-3 bg-blue-900 text-white flex items-center justify-between px-4 md:px-6 flex-shrink-0 print:hidden">
         <div className="flex items-center space-x-2 md:space-x-3">
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
-            <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-blue-900" />
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <img 
+              src="https://raw.githubusercontent.com/edibrata/image/main/Foto%20Profil%20Edi%20Brata%2020260210.png" 
+              alt="Logo Edi Brata" 
+              className="w-full h-full object-cover" 
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div>
-            <h1 className="text-base md:text-lg font-bold leading-tight">Generator RPP AI</h1>
-            <p className="text-[10px] md:text-xs text-blue-200 mt-0.5">Panduan BSKAP 2025</p>
-          </div>
-        </div>
-        <div className="flex flex-col items-end justify-center">
-          <div className="bg-blue-800 border border-blue-700 px-2 py-1 md:px-3 md:py-1.5 rounded-full flex items-center space-x-1 md:space-x-2">
-            <span className="hidden md:inline text-[10px] uppercase tracking-widest text-blue-300 font-semibold">Dikembangkan oleh</span>
-            <span className="text-[10px] md:text-xs font-bold text-white">Edi Brata</span>
+            <h1 className="text-base md:text-lg font-bold leading-tight">Generator Penyusunan RPM</h1>
+            <p className="text-[11px] md:text-sm text-yellow-300 font-bold mt-0.5 tracking-wide">Dikembangkan oleh Edi Brata</p>
           </div>
         </div>
       </header>
