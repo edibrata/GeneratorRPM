@@ -1,11 +1,10 @@
 import { GoogleGenAI } from '@google/genai';
 
-export async function generateRPM(formData: any) {
-    const key = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
-    if (!key) {
-        throw new Error('API Key belum diatur. Masukkan API Key ke VITE_GEMINI_API_KEY di pengaturan environment Render/GitHub.');
+export async function generateRPM(formData: any, apiKey: string) {
+    if (!apiKey) {
+        throw new Error('API Key belum diatur. Silakan masukkan API Key Gemini Anda pada form yang tersedia.');
     }
-    const ai = new GoogleGenAI({ apiKey: key });
+    const ai = new GoogleGenAI({ apiKey });
 
     const {
         namaSekolah,

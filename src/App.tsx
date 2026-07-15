@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Loader2, Sparkles, Printer, FileText, FileDown, Copy } from 'lucide-react';
+import { Loader2, Sparkles, Printer, FileText, FileDown, Copy, Key } from 'lucide-react';
 import { generateRPM } from './lib/gemini';
 
 export default function App() {
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('gemini_api_key') || '');
   const [formData, setFormData] = useState({
     namaSekolah: '',
     namaGuru: '',
@@ -21,6 +22,10 @@ export default function App() {
   const [result, setResult] = useState('');
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    localStorage.setItem('gemini_api_key', apiKey);
+  }, [apiKey]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -32,7 +37,7 @@ export default function App() {
     setResult('');
 
     try {
-      const generatedResult = await generateRPM(formData);
+      const generatedResult = await generateRPM(formData, apiKey);
       setResult(generatedResult);
     } catch (err: any) {
       console.error(err);
@@ -100,6 +105,27 @@ export default function App() {
       <div className="flex flex-1 flex-col md:flex-row md:overflow-hidden print:overflow-visible print:block">
         {/* Sidebar Input */}
         <aside className="w-full md:w-80 lg:w-96 bg-white border-b md:border-b-0 md:border-r border-slate-200 p-4 md:p-5 flex flex-col space-y-4 flex-shrink-0 md:overflow-y-auto print:hidden">
+          <div className="space-y-4 pb-4 border-b border-slate-200">
+            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+              <Key className="w-3.5 h-3.5" />
+              Pengaturan API
+            </h3>
+            <div className="space-y-1">
+              <label htmlFor="apiKey" className="block text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                Gemini API Key
+              </label>
+              <input
+                type="password"
+                id="apiKey"
+                name="apiKey"
+                placeholder="Masukkan API Key Gemini Anda"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                className="w-full p-2 text-sm border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 bg-slate-50"
+              />
+              <p className="text-[9px] text-slate-500">Tersimpan lokal di browser Anda.</p>
+            </div>
+          </div>
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4 h-full">
             <div className="space-y-4 pb-4 border-b border-slate-200">
               <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Identitas</h3>
