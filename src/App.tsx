@@ -37,8 +37,9 @@ export default function App() {
     setResult('');
 
     try {
-      const generatedResult = await generateRPM(formData, apiKey);
-      setResult(generatedResult);
+      await generateRPM(formData, apiKey, (text) => {
+        setResult(text);
+      });
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Terjadi kesalahan saat menghasilkan RPP.');
@@ -371,14 +372,14 @@ export default function App() {
                 </div>
               )}
 
-              {loading && (
+              {loading && !result && (
                 <div className="h-full flex flex-col items-center justify-center text-blue-900 space-y-4">
                   <Loader2 className="w-10 h-10 animate-spin" />
                   <p className="text-sm font-bold animate-pulse">Merancang Pembelajaran Mendalam...</p>
                 </div>
               )}
 
-              {result && !loading && (
+              {result && (
                 <div className="bg-white mx-auto shadow-md border border-slate-200 rounded-xl max-w-5xl p-8 sm:p-12 print:p-0 print:border-none print:shadow-none mb-8">
                   <div className="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-h1:text-center prose-h1:text-2xl prose-h1:mb-8 prose-h1:uppercase prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:border-b prose-h2:pb-2 prose-h2:border-slate-200 prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3 prose-p:text-slate-700 prose-p:leading-relaxed prose-li:text-slate-700 prose-strong:text-slate-900 prose-strong:font-semibold prose-table:w-full prose-table:border-collapse prose-table:border prose-table:border-slate-300 prose-table:my-6 prose-th:bg-slate-100 prose-th:p-3 prose-th:border prose-th:border-slate-300 prose-th:text-left prose-td:p-3 prose-td:border prose-td:border-slate-300 prose-td:align-top print:text-black print:prose-headings:text-black">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.replace(/^---[\s\S]*?---\n/, '')}</ReactMarkdown>

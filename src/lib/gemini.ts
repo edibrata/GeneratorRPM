@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 
-export async function generateRPM(formData: any, apiKey: string) {
+export async function generateRPM(formData: any, apiKey: string, onUpdate?: (text: string) => void) {
     if (!apiKey) {
         throw new Error('API Key belum diatur. Silakan masukkan API Key Gemini Anda pada form yang tersedia.');
     }
@@ -257,15 +257,24 @@ ${subjectSpecificInstructions}
 - Alokasi Waktu: ${alokasiWaktu}
 - Karakteristik / Kesiapan Awal Murid: ${kesiapanAwal || 'Tidak disertakan'}`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+      const responseStream = await ai.models.generateContentStream({
+        model: 'gemini-2.5-pro',
         contents: prompt,
         config: {
           systemInstruction,
           temperature: 0.7,
+          maxOutputTokens: 8192,
+          
         }
       });
 
       
-    return response.text;
+    let fullText = '';
+      for await (const chunk of responseStream) {
+        if (chunk.text) {
+          fullText += chunk.text;
+          if (onUpdate) onUpdate(fullText);
+        }
+      }
+      return fullText;
 }
